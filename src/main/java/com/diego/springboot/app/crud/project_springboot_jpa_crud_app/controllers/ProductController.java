@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import com.diego.springboot.app.crud.project_springboot_jpa_crud_app.ProductValidation;
 import com.diego.springboot.app.crud.project_springboot_jpa_crud_app.entities.Product;
 import com.diego.springboot.app.crud.project_springboot_jpa_crud_app.services.ProductService;
 
@@ -22,6 +23,9 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private ProductValidation productValidation;
 
     @GetMapping
     public List<Product> list() {
@@ -40,6 +44,7 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody Product product, BindingResult result) {
+        productValidation.validate(product, result);
         if (result.hasFieldErrors()) {
             return validation(result);
         }
@@ -50,6 +55,7 @@ public class ProductController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@Valid @RequestBody Product product, BindingResult result,
             @PathVariable Long id) {
+        productValidation.validate(product, result);
         if (result.hasFieldErrors()) {
             return validation(result);
         }
@@ -80,7 +86,7 @@ public class ProductController {
         result.getFieldErrors().forEach(err -> {
             errors.put(err.getField(), "El campo" + " " + err.getField() + " " + err.getDefaultMessage());
         });
-        return  ResponseEntity.badRequest().body(errors);
+        return ResponseEntity.badRequest().body(errors);
 
     }
 
