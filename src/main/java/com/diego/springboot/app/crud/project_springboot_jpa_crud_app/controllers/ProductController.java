@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import com.diego.springboot.app.crud.project_springboot_jpa_crud_app.ProductValidation;
+//import com.diego.springboot.app.crud.project_springboot_jpa_crud_app.ProductValidation;
 import com.diego.springboot.app.crud.project_springboot_jpa_crud_app.entities.Product;
 import com.diego.springboot.app.crud.project_springboot_jpa_crud_app.services.ProductService;
 
@@ -24,8 +24,8 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @Autowired
-    private ProductValidation productValidation;
+    //@Autowired
+   // private ProductValidation productValidation;
 
     @GetMapping
     public List<Product> list() {
@@ -44,18 +44,17 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody Product product, BindingResult result) {
-        productValidation.validate(product, result);
+        // productValidation.validate(product, result);
         if (result.hasFieldErrors()) {
             return validation(result);
         }
-        Product productNew = productService.save(product);
-        return ResponseEntity.status(HttpStatus.CREATED).body(productNew);
+        return ResponseEntity.status(HttpStatus.CREATED).body(productService.save(product));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@Valid @RequestBody Product product, BindingResult result,
             @PathVariable Long id) {
-        productValidation.validate(product, result);
+        // productValidation.validate(product, result);
         if (result.hasFieldErrors()) {
             return validation(result);
         }
